@@ -1,3 +1,4 @@
+import csv
 import en_core_web_sm
 import json
 import numpy as np
@@ -427,3 +428,13 @@ def print_qa(qa_list: List[Mapping[str, str]], show_answers: bool = True) -> Non
         else:
             if show_answers:
                 print(f"{space}A: {answer}\n")
+
+def export_qa_csv(qa_list: List[Mapping[str, str]]) -> None:
+    """writes the questions and answers into a prompt and response csv.
+       currently only supports full sentence answer type"""
+    with open('qa_list.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        fields = ["prompt", "response"]
+        writer.writerow(fields) 
+        for i in range(len(qa_list)):
+            writer.writerow([qa_list[i]['question'], qa_list[i]["answer"]])

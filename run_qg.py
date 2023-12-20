@@ -1,6 +1,6 @@
 import argparse
 from questiongenerator import QuestionGenerator
-from questiongenerator import print_qa
+from questiongenerator import print_qa, export_qa_csv
 
 
 def parse_args() -> argparse.Namespace:
@@ -16,6 +16,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--show_answers", dest="show_answers", action="store_true", default=True)
     parser.add_argument("--text_file", type=str, required=True)
     parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)
+    parser.add_argument("--export_csv", type=bool)
     return parser.parse_args()
 
 
@@ -31,3 +32,5 @@ if __name__ == "__main__":
         use_evaluator=args.use_qa_eval
     )
     print_qa(qa_list, show_answers=args.show_answers)
+    if args.export_csv:
+        export_qa_csv(qa_list)
