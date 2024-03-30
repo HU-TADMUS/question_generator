@@ -9,16 +9,16 @@ from trainer import Trainer
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataloader_workers", type=int, default=2)
-    parser.add_argument("--device", type=str, default="cuda")
+    parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--learning_rate", type=float, default=1e-3)
     parser.add_argument("--max_length", type=int, default=512)
-    parser.add_argument("--qg_model", type=str, default="t5-base")
+    parser.add_argument("--qg_model", type=str, default="../../model/tadmus")
     parser.add_argument("--pad_mask_id", type=int, default=-100)
     parser.add_argument("--pin_memory", dest="pin_memory", action="store_true", default=False)
     parser.add_argument("--save_dir", type=str, default="./t5-base-question-generator")
     parser.add_argument("--train_batch_size", type=int, default=4)
-    parser.add_argument("--valid_batch_size", type=int, default=32)
+    parser.add_argument("--valid_batch_size", type=int, default=25)
     return parser.parse_args()
 
 
@@ -41,7 +41,9 @@ def get_model(checkpoint: str, device: str, tokenizer: T5Tokenizer) -> T5ForCond
 if __name__ == "__main__":
     args = parse_args()
     tokenizer = get_tokenizer(args.qg_model)
-    dataset = datasets.load_dataset("iarfmoose/question_generator")
+    dataset = datasets.load_dataset("csv",  
+                                    data_files={"train": ["/localhost/TADMUS/fm-390-tatics/qa_generator/train2.csv"], 
+                                                "validation": ["/localhost/TADMUS/fm-390-tatics/qa_generator/valid_qa.csv"]})
     train_set = QGDataset(dataset["train"], args.max_length, args.pad_mask_id, tokenizer)
     valid_set = QGDataset(dataset["validation"], args.max_length, args.pad_mask_id, tokenizer)
     model = get_model(args.qg_model, args.device, tokenizer)
