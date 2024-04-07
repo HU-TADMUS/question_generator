@@ -11,6 +11,7 @@ from transformers import (
     AutoModelForSequenceClassification,
 )
 from typing import Any, List, Mapping, Tuple
+import os
 
 
 class QuestionGenerator:
@@ -25,7 +26,7 @@ class QuestionGenerator:
 
     def __init__(self) -> None:
 
-        QG_PRETRAINED = "iarfmoose/t5-base-question-generator"
+        QG_PRETRAINED = "huacl/tadmus-question-generator"
         self.ANSWER_TOKEN = "<answer>"
         self.CONTEXT_TOKEN = "<context>"
         self.SEQ_LENGTH = 512
@@ -34,8 +35,8 @@ class QuestionGenerator:
             "cuda" if torch.cuda.is_available() else "cpu")
 
         self.qg_tokenizer = AutoTokenizer.from_pretrained(
-            QG_PRETRAINED, use_fast=False)
-        self.qg_model = AutoModelForSeq2SeqLM.from_pretrained(QG_PRETRAINED)
+            QG_PRETRAINED, use_fast=False, use_auth_token=True)
+        self.qg_model = AutoModelForSeq2SeqLM.from_pretrained(QG_PRETRAINED, use_auth_token=True)
         self.qg_model.to(self.device)
         self.qg_model.eval()
 
@@ -337,9 +338,10 @@ class QAEvaluator:
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
 
-        self.qae_tokenizer = AutoTokenizer.from_pretrained(QAE_PRETRAINED)
+        self.qae_tokenizer = AutoTokenizer.from_pretrained(QAE_PRETRAINED, use_auth_token=True)
         self.qae_model = AutoModelForSequenceClassification.from_pretrained(
-            QAE_PRETRAINED
+            QAE_PRETRAINED,
+            use_auth_token=True
         )
         self.qae_model.to(self.device)
         self.qae_model.eval()
@@ -438,3 +440,16 @@ def export_qa_csv(qa_list: List[Mapping[str, str]]) -> None:
         writer.writerow(fields) 
         for i in range(len(qa_list)):
             writer.writerow([qa_list[i]['question'], qa_list[i]["answer"]])
+
+def export_train_csv(qa_list: List[Mapping[str, str]], text_file) -> None:
+    """writes the questions, answers and context into text csv.
+       currently only supports full sentence answer type."""
+    with open('qa_list.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        fields = ["question", "text"]
+        writer.writerow(fields) 
+        for i in range(len(qa_list)):
+            writer.writerow([
+                qa_list[i]['question'], 
+                '<answer> {answer} <context> {text_file}'.format(answer=qa_list[i]["answer"], text_file=text_file),
+                ])

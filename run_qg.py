@@ -1,6 +1,6 @@
 import argparse
 from questiongenerator import QuestionGenerator
-from questiongenerator import print_qa, export_qa_csv
+from questiongenerator import print_qa, export_qa_csv, export_train_csv
 
 
 def parse_args() -> argparse.Namespace:
@@ -12,11 +12,12 @@ def parse_args() -> argparse.Namespace:
         help="The desired type of answers. Choose from ['all', 'sentences', 'multiple_choice']",
     )
     parser.add_argument("--model_dir", type=str, default=None)
-    parser.add_argument("--num_questions", type=int, default=10)
+    parser.add_argument("--num_questions", type=int, default=25)
     parser.add_argument("--show_answers", dest="show_answers", action="store_true", default=True)
     parser.add_argument("--text_file", type=str, required=True)
     parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)
     parser.add_argument("--export_csv", type=bool)
+    parser.add_argument("--export_train_csv", type=bool)
     return parser.parse_args()
 
 
@@ -34,3 +35,5 @@ if __name__ == "__main__":
     print_qa(qa_list, show_answers=args.show_answers)
     if args.export_csv:
         export_qa_csv(qa_list)
+    if args.export_train_csv:
+        export_train_csv(qa_list, text_file)
