@@ -16,8 +16,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--show_answers", dest="show_answers", action="store_true", default=True)
     parser.add_argument("--text_file", type=str, required=True)
     parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)
-    parser.add_argument("--export_csv", type=bool)
-    parser.add_argument("--export_train_csv", type=bool)
+    parser.add_argument("--export_csv", type=str, default=None)
+    parser.add_argument("--export_train_csv", type=str, default=None)
     return parser.parse_args()
 
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         use_evaluator=args.use_qa_eval
     )
     print_qa(qa_list, show_answers=args.show_answers)
-    if args.export_csv:
+    if args.export_csv is not None:
         export_qa_csv(qa_list)
-    if args.export_train_csv:
+    if args.export_train_csv is not None:
         export_train_csv(qa_list, text_file)
