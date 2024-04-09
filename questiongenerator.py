@@ -57,6 +57,8 @@ class QuestionGenerator:
 
         qg_inputs, qg_answers = self.generate_qg_inputs(article, answer_style)
         generated_questions = self.generate_questions_from_inputs(qg_inputs)
+        for answers in range(len(qg_answers)):
+            print(answers+1,'Question:', generated_questions[answers],'\tAnswer:', qg_answers[answers],'\n')
 
         message = "{} questions doesn't match {} answers".format(
             len(generated_questions), len(qg_answers)
@@ -434,7 +436,7 @@ def export_qa_csv(qa_list: List[Mapping[str, str]]) -> None:
        currently only supports full sentence answer type"""
     with open('qa_list.csv', 'w', newline='') as file:
         writer = csv.writer(file)
-        fields = ["prompt", "response"]
+        fields = ["question", "text"]
         writer.writerow(fields) 
         for i in range(len(qa_list)):
             writer.writerow([qa_list[i]['question'], qa_list[i]["answer"]])

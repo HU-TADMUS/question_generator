@@ -7,16 +7,16 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--answer_style",
-        default="all",
+        default="sentences",
         type=str,
         help="The desired type of answers. Choose from ['all', 'sentences', 'multiple_choice']",
     )
     parser.add_argument("--model_dir", type=str, default=None)
-    parser.add_argument("--num_questions", type=int, default=10)
+    parser.add_argument("--num_questions", type=int, default=15)
     parser.add_argument("--show_answers", dest="show_answers", action="store_true", default=True)
-    parser.add_argument("--text_file", type=str, required=True)
-    parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)
-    parser.add_argument("--export_csv", type=bool)
+    parser.add_argument("--text_file", type=str, required= True) #if defualt, deafualt= 'path name'
+    parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)#evaluates the questions and chooses the passed number of questions 
+    parser.add_argument("--export_csv", type=bool)#export csv #can use defualt on this 
     return parser.parse_args()
 
 
