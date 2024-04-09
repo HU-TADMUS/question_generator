@@ -431,20 +431,20 @@ def print_qa(qa_list: List[Mapping[str, str]], show_answers: bool = True) -> Non
             if show_answers:
                 print(f"{space}A: {answer}\n")
 
-def export_qa_csv(qa_list: List[Mapping[str, str]]) -> None:
+def export_qa_csv(qa_list: List[Mapping[str, str]], file_path) -> None:
     """writes the questions and answers into a prompt and response csv.
        currently only supports full sentence answer type"""
-    with open('qa_list.csv', 'w', newline='') as file:
+    with open('{file_path}.csv'.format(file_path), 'w', newline='') as file:
         writer = csv.writer(file)
         fields = ["prompt", "response"]
         writer.writerow(fields) 
         for i in range(len(qa_list)):
             writer.writerow([qa_list[i]['question'], qa_list[i]["answer"]])
 
-def export_train_csv(qa_list: List[Mapping[str, str]], text_file) -> None:
+def export_train_csv(qa_list: List[Mapping[str, str]], text_file, file_path) -> None:
     """writes the questions, answers and context into text csv.
        currently only supports full sentence answer type."""
-    with open('qa_list.csv', 'w', newline='') as file:
+    with open('{file_path}.csv'.format(file_path), 'w', newline='') as file:
         writer = csv.writer(file)
         fields = ["question", "text"]
         writer.writerow(fields) 
