@@ -13,17 +13,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--learning_rate", type=float, default=1e-3)
     parser.add_argument("--max_length", type=int, default=512)
-    parser.add_argument("--qg_model", type=str, default="../../model/tadmus")
+    parser.add_argument("--qg_model", type=str, default="huacl/tadmus-question-generator")
     parser.add_argument("--pad_mask_id", type=int, default=-100)
     parser.add_argument("--pin_memory", dest="pin_memory", action="store_true", default=False)
-    parser.add_argument("--save_dir", type=str, default="./t5-base-question-generator")
+    parser.add_argument("--save_dir", type=str, default="../../model/tadmus")
     parser.add_argument("--train_batch_size", type=int, default=4)
     parser.add_argument("--valid_batch_size", type=int, default=25)
     return parser.parse_args()
 
 
 def get_tokenizer(checkpoint: str) -> T5Tokenizer:
-    tokenizer = T5Tokenizer.from_pretrained(checkpoint)
+    tokenizer = T5Tokenizer.from_pretrained(checkpoint, use_auth_token=True)
     tokenizer.add_special_tokens(
         {'additional_special_tokens': ['<answer>', '<context>']}
     )
@@ -32,7 +32,7 @@ def get_tokenizer(checkpoint: str) -> T5Tokenizer:
 
 def get_model(checkpoint: str, device: str, tokenizer: T5Tokenizer) -> T5ForConditionalGeneration:
     config = T5Config(decoder_start_token_id=tokenizer.pad_token_id)
-    model = T5ForConditionalGeneration(config).from_pretrained(checkpoint)
+    model = T5ForConditionalGeneration(config).from_pretrained(checkpoint, use_auth_token=True)
     model.resize_token_embeddings(len(tokenizer))
     model = model.to(device)
     return model
@@ -41,9 +41,10 @@ def get_model(checkpoint: str, device: str, tokenizer: T5Tokenizer) -> T5ForCond
 if __name__ == "__main__":
     args = parse_args()
     tokenizer = get_tokenizer(args.qg_model)
-    dataset = datasets.load_dataset("csv",  
-                                    data_files={"train": ["/localhost/TADMUS/fm-390-tatics/qa_generator/train2.csv"], 
-                                                "validation": ["/localhost/TADMUS/fm-390-tatics/qa_generator/valid_qa.csv"]})
+    #dataset = datasets.load_dataset("csv",  
+                                   # data_files={"train": ["/localhost/TADMUS/fm-390-tatics/qa_generator/train2.csv"], 
+                                              #  "validation": ["/localhost/TADMUS/fm-390-tatics/qa_generator/valid_qa.csv"]})]
+    dataset = datasets.load_dataset("huacl/fm-390-tactics", "qa_generator")
     train_set = QGDataset(dataset["train"], args.max_length, args.pad_mask_id, tokenizer)
     valid_set = QGDataset(dataset["validation"], args.max_length, args.pad_mask_id, tokenizer)
     model = get_model(args.qg_model, args.device, tokenizer)
