@@ -34,6 +34,6 @@ if __name__ == "__main__":
     )
     print_qa(qa_list, show_answers=args.show_answers)
     if args.export_csv is not None:
-        export_qa_csv(qa_list)
+        export_qa_csv(qa_list, args.export_csv)
     if args.export_train_csv is not None:
-        export_train_csv(qa_list, text_file)
+        export_train_csv(qa_list, text_file, args.export_train.csv)
