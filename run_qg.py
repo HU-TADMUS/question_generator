@@ -12,7 +12,7 @@ def parse_args() -> argparse.Namespace:
         help="The desired type of answers. Choose from ['all', 'sentences', 'multiple_choice']",
     )
     parser.add_argument("--model_dir", type=str, default=None)
-    parser.add_argument("--num_questions", type=int, default=25)
+    parser.add_argument("--num_questions", type=int, default=20)
     parser.add_argument("--show_answers", dest="show_answers", action="store_true", default=True)
     parser.add_argument("--text_file", type=str, required=True)
     parser.add_argument("--use_qa_eval", dest="use_qa_eval", action="store_true", default=True)

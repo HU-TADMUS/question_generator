@@ -41,6 +41,7 @@ class QuestionGenerator:
         self.qg_model.eval()
 
         self.qa_evaluator = QAEvaluator()
+      #   print('device: {}'.format(self.device))
 
     def generate(
         self,
