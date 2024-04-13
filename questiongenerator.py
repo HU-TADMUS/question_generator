@@ -40,6 +40,7 @@ class QuestionGenerator:
         self.qg_model.eval()
 
         self.qa_evaluator = QAEvaluator()
+      #   print('device: {}'.format(self.device))
 
     def generate(
         self,
@@ -432,7 +433,7 @@ def print_qa(qa_list: List[Mapping[str, str]], show_answers: bool = True) -> Non
 def export_qa_csv(qa_list: List[Mapping[str, str]]) -> None:
     """writes the questions and answers into a prompt and response csv.
        currently only supports full sentence answer type"""
-    with open('qa_list.csv', 'w', newline='') as file:
+    with open('./qa_list.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         fields = ["prompt", "response"]
         writer.writerow(fields) 
